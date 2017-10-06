@@ -2,7 +2,7 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ### Model Documentation and Reflection
-Trajectory generation is done using the Frenet coordinate space based on the road waypoints with splines (main.cpp:323-403). A spline is used to generate curves that can yield a smooth driving experience. Initial points are generated in Frenet using s values that are 30, 60, 90 meters ahead of the vehicle. The spline is used to fit these initial points. Points on the spline are picked so that the desired velocity is met and these are converted back to cartesian coordinates for the car controller. 
+Trajectory generation is done using the Frenet coordinate space based on the road waypoints with splines (main.cpp:323-403). A spline is used to generate curves that can yield a smooth driving experience. Initial points are generated in Frenet using s values that are 30, 60, 90 meters ahead of the vehicle. The spline is used to fit these initial points. Points on the spline are picked so that the desired velocity is met and these are converted back to cartesian coordinates for the car controller. The implementation for this was taken from the walkthrough video lesson.
 
 The spline library used in the current project was from: [http://kluge.in-chemnitz.de/opensource/spline/](http://kluge.in-chemnitz.de/opensource/spline/)
 
