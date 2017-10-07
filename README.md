@@ -2,15 +2,15 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ### Model Documentation and Reflection
-Trajectory generation is done using the Frenet coordinate space based on the road waypoints with splines (main.cpp:323-403). A spline is used to generate curves that can yield a smooth driving experience. Initial points are generated in Frenet using s values that are 30, 60, 90 meters ahead of the vehicle. The spline is used to fit these initial points. Points on the spline are picked so that the desired velocity is met and these are converted back to cartesian coordinates for the car controller. The implementation for this was taken from the walkthrough video lesson.
+Trajectory generation is done using the Frenet coordinate space based on the road waypoints with splines (main.cpp:333-413). A spline is used to generate curves that can yield a smooth driving experience. Initial points are generated in Frenet using s values that are 30, 60, 90 meters ahead of the vehicle. The spline is used to fit these initial points. Points on the spline are picked so that the desired velocity is met and these are converted back to cartesian coordinates for the car controller. The implementation for this was taken from the walkthrough video lesson.
 
 The spline library used in the current project was from: [http://kluge.in-chemnitz.de/opensource/spline/](http://kluge.in-chemnitz.de/opensource/spline/)
 
-A simple finite state machine is used for the behavior planner (main.cpp:275-315). The default state is to stay in the current lane and maintain a velocity of 49.5 mph. If a slow car is encountered 30 meters ahead, it will look to see if there are cars to the left and right lanes. If there are no cars in the left, it will change lanes to the left first. If there is a car on the left, but no car on the right, then it will change to the right lane. If there are cars to the left and right, then it will slow down. For looking at the cars to the sides, it will look 30 meters ahead and 15 meters behind.
+A simple finite state machine is used for the behavior planner (main.cpp:275-331). The default state is to stay in the current lane and maintain a velocity of 49.5 mph. If a slow car is encountered 30 meters ahead, it will look to see if there are cars to the left and right lanes. If there are no cars in the left, it will change lanes to the left first. If there is a car on the left, but no car on the right, then it will change to the right lane. If there are cars to the left and right, then it will slow down. For looking at the cars to the sides, it will look 30 meters ahead and 30 meters behind. The path planner will check if a car in an adjacent lane is about to change into the current lane by checking if the d value is within 1 meter of the current lane. 
 
 While the state machine could have been more complex to determine which lane would be more optimal using a cost function, the current implementation was sufficient to fulfill the project requirements. 
 
-Here's a video of the path planner being run for 10 minutes: [Youtube link](https://youtu.be/6gaFevED2SM)
+Here's a video of the path planner being run for 19 minutes: [Youtube link](https://youtu.be/_V9e-fIDSgA)
 
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).

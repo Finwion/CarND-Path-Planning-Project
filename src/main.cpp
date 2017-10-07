@@ -264,31 +264,39 @@ int main() {
 	    double check_speed = sqrt(vx*vx + vy*vy);
 	    double check_car_s = sensor_fusion[i][5];
 		  
-	    //Track position of deaccelerating adjacent car
-	    //because check_speed is only magnitude, need to consider if v is neg
-	    //double check_car_s_neg = check_car_s - ((double)prev_size*0.02*check_speed);
+
+
+
 
 	    // update the position of the detected car to what is projected in the future if v is positive
 	    check_car_s += ((double)prev_size*0.02*check_speed);		  
 		  
-	    //current car is in the same lane as our car
-	    if(d < (4+4*lane) && d > 4*lane) {
-					
+	    //current car is in the same lane as our car (or 1m to the side - for cars that are in the process of changing lanes)
+	    double left_bound = 4*lane - 1;
+	    double right_bound = 4+4*lane + 1;
+	    if(left_bound < 0) {
+	      left_bound = 0; //ignore opposing cars if in the left most lane
+	    }
+
+	    if(d < right_bound && d > left_bound) {
 	      // if the distance between us and the car ahead of us is less than 30m, then we are too close
 	      // also check for only cars ahead of us
 	      if((check_car_s > car_s) && ((check_car_s-car_s) < 30)) {
 		too_close = true;
 	      }
-	      //current car is to the left of our car or slightly behind (5m)
-	    } else if (d < (4*lane) && d > (4*(lane-1))) {
-	      if((check_car_s + 15 > car_s) && ((check_car_s-car_s) < 30)) {
+	      
+	    } 
+	    
+	    //current car is to the left of our car or slightly behind (5m)
+	    if (d < (4*lane) && d > (4*(lane-1))) {
+	      if((check_car_s + 30 > car_s) && ((check_car_s-car_s) < 30)) {
 		car_on_left = true;
 	      }
 	      //current car is to the right of our car or slightly behind (5m)		
 	    } else if (d > (4+4*lane) && d < (4+4*(lane+1))) {
-	      if((check_car_s + 15 > car_s) && ((check_car_s-car_s) < 30)) {
+	      if((check_car_s + 30 > car_s) && ((check_car_s-car_s) < 30)) {
 		car_on_right = true;
-	      }		
+	      }
 	    }
 	  }
 
@@ -299,10 +307,12 @@ int main() {
 	    if(!car_on_left && lane > 0 && lane_change_cnt == 0) {
 	      lane -= 1;
 	      lane_change_cnt += 1;  
+	      ref_vel -= 0.224;
 	      //go right if there is no car there and left is occupied
 	    } else if (!car_on_right && lane < 2 && lane_change_cnt == 0) {
 	      lane += 1;
 	      lane_change_cnt += 1;
+	      ref_vel -= 0.224;
 	    } else { 
 	      //stay in same lane because we can't change lanes yet - reduce speed
 	      //reduce speed faster than increase velocity
@@ -315,8 +325,8 @@ int main() {
             lane_change_cnt += 1;
 	  }		    
 	  
-	  if(lane_change_cnt == 5) {
-	    //reset counter after 5 cycles (5*20ms = 100ms)
+	  if(lane_change_cnt == 10) {
+	    //reset counter after 5 cycles (10*20ms = 200ms)
 	    lane_change_cnt = 0;
 	  }
 
